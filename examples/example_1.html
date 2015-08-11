@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Collager Example #1</title>
+        <style>
+         body {
+             margin: 10px;
+         }
+         #before img {
+             margin-right: 20px;
+             margin-bottom: 20px;
+             display: inline-block;
+             vertical-align: top;
+         }
+         .container {
+             border: solid 1px #999999;
+             width: 400px;
+             height: 300px;
+         }
+         p {
+             margin-top: 1em;
+             margin-bottom: 0.5em;
+             max-width: 50em;
+         }
+         p:first-child {
+             margin-top: 0;
+         }
+        </style>
+    </head>
+
+    <body>
+        <p>
+            Suppose you have a collection of images that looks this this:
+        </p>
+        <div id="before"></div>
+        <p>
+            And suppose you want them to fit in a 400x300 pixel container. Here
+            is one way that collager will arrange the images to fit (using the
+            default options for padding between the images):
+        </p>
+        <div id="after" class="container"></div>
+        <p>
+            Observe that collager left some empty space at the top and bottom of
+            the container. It could have used several approaches to avoid this
+            empty space, including:
+        </p>
+        <ul>
+            <li>Cropping one or more images.</li>
+            <li>Changing the aspect ratio of one or more images.</li>
+            <li>Overriding the user's specifications for the padding between images.</li>
+        </ul>
+        <p>
+            However, collager is designed under the principle that leaving empty
+            space is preferable to each of these approaches.
+        </p>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+        <script src="../collager.js"></script>
+        <script>
+
+         var images = [
+             { path: 'images/a.png', width: 180, height: 260 },
+             { path: 'images/b.png', width:  80, height: 130 },
+             { path: 'images/c.png', width: 240, height: 180 },
+             { path: 'images/d.png', width: 320, height: 150 },
+             { path: 'images/e.png', width: 220, height: 220 },
+             { path: 'images/f.png', width: 100, height: 240 }
+         ];
+
+         d3.select('#before')
+             .selectAll('img')
+             .data(images)
+             .enter()
+             .append('img')
+             .attr('src', function(d) { return d.path; })
+             .attr('width', function(d) { return d.width; })
+             .attr('height', function(d) { return d.height; })
+         ;
+
+         collager().arrange({
+             objects: images,
+             containerWidth: 400,
+             containerHeight: 300
+         });
+
+         d3.select('#after')
+             .style('position', 'relative')
+             .selectAll('img')
+             .data(images)
+             .enter()
+             .append('img')
+             .attr('src', function(d) { return d.path; })
+             .attr('width', function(d) { return d.collagerWidth; })
+             .attr('height', function(d) { return d.collagerHeight; })
+             .style('position', 'absolute')
+             .style('top', function(d) { return d.collagerTop + 'px'; })
+             .style('left', function(d) { return d.collagerLeft + 'px'; })
+         ;
+         
+        </script>
+    </body>
+</html>
